@@ -16,16 +16,6 @@ from .routers import users,posts,auth,likes
 app=FastAPI()
 
 
-while True:
-    try:
-        conn=psycopg2.connect(host="localhost",database="fastapi",user="postgres",password='340721',cursor_factory=RealDictCursor)
-        cursor=conn.cursor()
-        print('database connection completed succesfully')
-        break
-    except Exception as error:
-        print(f"database connection failed.Error:{error}" )
-        time.sleep(2)
-
 @app.get("/")
 def root():
     return {'message':'hello world'}
