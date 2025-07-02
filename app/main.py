@@ -23,7 +23,7 @@ while True:
         print('database connection completed succesfully')
         break
     except Exception as error:
-        print("database connection failed.Error:{error}" )
+        print(f"database connection failed.Error:{error}" )
         time.sleep(2)
 
 @app.get("/")
