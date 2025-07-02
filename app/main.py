@@ -26,6 +26,10 @@ while True:
         print("database connection failed.Error:{error}" )
         time.sleep(2)
 
+@app.get("/")
+def root():
+    return {'message':'hello world'}
+
 
 app.include_router(users.router)
 app.include_router(posts.router)
