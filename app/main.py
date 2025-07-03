@@ -18,7 +18,7 @@ app=FastAPI()
 
 @app.get("/")
 def root():
-    return {'message':'hello world'}
+    return {'message':'hello Arda CNG'}
 
 
 app.include_router(users.router)
