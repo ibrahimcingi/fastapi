@@ -32,7 +32,7 @@ app.add_middleware(
 def root():
     return {'message':'hello Arda CNG'}
 
-@app.get("/tests",response_model=schemas.PostResponse)
+@app.get("/tests",response_model=List[schemas.PostResponse])
 def get_posts(db:Session=Depends(get_db)):
     posts=db.query(models.Post).all()
     return posts
