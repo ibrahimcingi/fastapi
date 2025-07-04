@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from .routers import users,posts,auth,likes
 from fastapi.middleware.cors import CORSMiddleware
 from .oauth2 import get_current_user
+from sqlalchemy import func
 
 
 #models.Base.metadata.create_all(bind=engine)
@@ -32,10 +33,17 @@ app.add_middleware(
 def root():
     return {'message':'hello Arda CNG'}
 
-@app.get("/tests",response_model=List[schemas.PostResponse])
-def get_posts(db:Session=Depends(get_db)):
-    posts=db.query(models.Post).all()
+@app.get("/tests",response_model=List[schemas.Postout])
+def get_posts(db:Session=Depends(get_db),limit=10,search:Optional[str]=""):
+    posts=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Like,models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).all()
+    #instead of writing all we could write filter and implement limitation,search and skipping filters
     return posts
+
+@app.get("/users_posts/{id}")
+def get_users_post(db:Session=Depends(get_db)):
+    users_posts=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).filter(models.Post.id==id).all()
+    return users_posts
+
 
 @app.post("/test")
 def create_post(post=schemas.PostCreate,db:Session=Depends(get_db),current_user=Depends(get_current_user)):

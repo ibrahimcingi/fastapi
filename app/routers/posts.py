@@ -12,7 +12,7 @@ router=APIRouter(prefix="/posts",tags=['Users'])
 
 @router.get("/",response_model=List[schemas.Postout])
 def get_posts(db:Session=Depends(get_db),current_user:models.User=Depends(oauth2.get_current_user),limit:int=10,skip:int=0,search:Optional[str]=""):
-    print(current_user.email) #just for checking if current_user properties are working
+    #print(current_user.email) #just for checking if current_user properties are working
     results=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Like,models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     return results
 
