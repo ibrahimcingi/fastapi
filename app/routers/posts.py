@@ -27,7 +27,7 @@ def create_posts(post:schemas.PostCreate,db:Session=Depends(get_db),current_user
     db.refresh(new_post)
     return new_post
 
-@app.get("/user/{id}",response_model=List[schemas.Postout])
+@router.get("/user/{id}",response_model=List[schemas.Postout])
 def get_users_post(db:Session=Depends(get_db)):
     users_posts=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).filter(models.Post.user_id==id).all()
     return users_posts
