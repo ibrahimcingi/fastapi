@@ -31,6 +31,12 @@ app.add_middleware(
 def root():
     return {'message':'hello Arda CNG'}
 
+@app.get("/post")
+def get_posts(db:Session=Depends(get_db)):
+    posts=db.query(models.Post).all()
+    return posts
+
+
 
 app.include_router(users.router)
 app.include_router(posts.router)
