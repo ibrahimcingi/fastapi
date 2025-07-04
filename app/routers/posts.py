@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import FastAPI, Response,status,HTTPException,Depends,APIRouter
 from typing import Optional,List
 
-router=APIRouter(prefix="/posts",tags=['Users'])
+router=APIRouter(prefix="/posts",tags=['Posts'])
 
 
 
@@ -29,11 +29,8 @@ def create_posts(post:schemas.PostCreate,db:Session=Depends(get_db),current_user
 
 @router.get("/user/{id}",response_model=List[schemas.Postout])
 def get_users_post(db:Session=Depends(get_db)):
-    users_posts=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).filter(models.Post.user_id==id).all()
+    users_posts=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Like,models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).filter(models.Post.user_id==id).all()
     return users_posts
-
-
-
 
 
 
