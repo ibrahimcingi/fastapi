@@ -2,14 +2,22 @@ from .. import models,schemas,utils,oauth2
 from ..database import get_db
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, Response,status,HTTPException,Depends,APIRouter
+from typing import List
 
 
 
 router=APIRouter(prefix="/users",tags=['Users'])
 
+@router.get("/",response_model=List[schemas.UserResponse])
+def get_users(db:Session=Depends(get_db)):
+     users=db.query(models.User).all()
+     return users
+     
 
-@router.post("/",status_code=status.HTTP_201_CREATED,response_model=schemas.UserResponse)
-def create_user(userinfo:schemas.UserCreate,db:Session=Depends(get_db)):
+
+
+@router.post("/register",status_code=status.HTTP_201_CREATED,response_model=schemas.UserResponse)
+def register_user(userinfo:schemas.UserCreate,db:Session=Depends(get_db)):
     userinfo.password=utils.hash(userinfo.password)
 
     new_user=models.User(**userinfo.dict())

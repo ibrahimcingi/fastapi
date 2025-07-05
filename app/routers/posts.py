@@ -86,3 +86,19 @@ def update_posts(id:int,updatedpost:schemas.PostCreate,db:Session=Depends(get_db
             
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Post with id {id} was not found")
 
+
+
+@router.get("/user/{user_id}")
+def get_users_published_posts(user_id:int,db:Session=Depends(get_db)):
+     posts=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Like,models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).filter(models.Post.user_id==user_id,models.Post.published==True).all()
+     return posts
+
+
+@router.get("/users/{email}",response_model=List[schemas.Postout])
+def get_users_published_posts(email:str,db:Session=Depends(get_db)):
+     user=db.query(models.User).filter(models.User.email==email).first()
+     posts=db.query(models.Post,func.count(models.Like.post_id).label('likes')).join(models.Like,models.Post.id==models.Like.post_id,isouter=True).group_by(models.Post.id).filter(models.Post.user_id==user.id,models.Post.published==True).all()
+     return posts
+
+
+
