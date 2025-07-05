@@ -22,10 +22,10 @@ def create_access_token(data:dict):
   return encoded_jwt
 
 
+
+
 def verify_token(token:str,credentials_exception):
-
   try:
-
     payload=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
     id:str=payload.get("id")
     if id is None:
@@ -36,6 +36,7 @@ def verify_token(token:str,credentials_exception):
 
   except JWTError:
     raise credentials_exception
+  
 
 
 def get_current_user(token:str=Depends(oauth2_scheme),db:Session=Depends(database.get_db)):

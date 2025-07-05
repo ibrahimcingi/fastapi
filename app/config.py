@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 import os
-from urllib.parse import urlparse
+
 
 class Settings(BaseSettings):
   database_hostname:str
