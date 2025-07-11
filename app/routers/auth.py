@@ -20,6 +20,8 @@ def login(user_credential:OAuth2PasswordRequestForm=Depends(),db:Session=Depends
   
   return {'access_token':access_token,'token_type':'bearer'}
 
+
+
 @router.post("/custom_login",response_model=schemas.Token)
 def custom_login(user_credentials:schemas.UserLogin,db:Session=Depends(get_db)):
   user=db.query(models.User).filter(models.User.email==user_credentials.email).first()
